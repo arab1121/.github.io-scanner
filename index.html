@@ -1,43 +1,280 @@
 <!DOCTYPE html>
-<html lang="ar">
-  <head>
-    <meta charset="UTF-8" />
-    <title>ماسح باركود المنتجات</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <style>
-      body {
-        font-family: Tahoma, sans-serif;
-        text-align: center;
-        margin-top: 30px;
-      }
-      #result {
-        padding: 15px;
-        font-size: 1.2em;
-        color: #004400;
-        background: #eafdd5;
-        margin: 15px auto;
-        width: 350px;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>ماسح الباركود عبر الكاميرا</h2>
-    <div id="reader" style="width: 350px; margin: auto"></div>
-    <div id="result">نتيجة المسح ستظهر هنا</div>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المخزون والمبيعات</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <!-- صفحة تسجيل الدخول -->
+    <div id="loginPage" class="page active">
+        <div class="container">
+            <div class="login-container">
+                <div class="card">
+                    <div class="card__body">
+                        <h1 class="login-title">نظام إدارة المخزون والمبيعات</h1>
+                        
+                        <!-- نموذج تسجيل الدخول -->
+                        <div id="loginForm" class="auth-form">
+                            <h2>تسجيل الدخول</h2>
+                            <div class="form-group">
+                                <label class="form-label" for="username">اسم المستخدم</label>
+                                <input type="text" id="username" class="form-control" placeholder="أدخل اسم المستخدم">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="password">كلمة المرور</label>
+                                <input type="password" id="password" class="form-control" placeholder="أدخل كلمة المرور">
+                            </div>
+                            <button class="btn btn--primary btn--full-width" onclick="login()">تسجيل الدخول</button>
+                            <p class="auth-switch">
+                                ليس لديك حساب؟ <a href="#" onclick="showRegisterForm()">إنشاء حساب جديد</a>
+                            </p>
+                        </div>
 
-    <script>
-      function onScanSuccess(decodedText, decodedResult) {
-        document.getElementById(
-          "result"
-        ).innerText = `باركود المنتج: ${decodedText}`;
-        html5QrcodeScanner.clear(); // لإيقاف المسح بعد التقاط أول باركود
-      }
+                        <!-- نموذج التسجيل -->
+                        <div id="registerForm" class="auth-form hidden">
+                            <h2>إنشاء حساب جديد</h2>
+                            <div class="form-group">
+                                <label class="form-label" for="regName">الاسم الكامل</label>
+                                <input type="text" id="regName" class="form-control" placeholder="أدخل الاسم الكامل">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="regUsername">اسم المستخدم</label>
+                                <input type="text" id="regUsername" class="form-control" placeholder="أدخل اسم المستخدم">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="regPassword">كلمة المرور</label>
+                                <input type="password" id="regPassword" class="form-control" placeholder="أدخل كلمة المرور">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="userRole">نوع المستخدم</label>
+                                <select id="userRole" class="form-control">
+                                    <option value="salesman">مندوب تسويق</option>
+                                    <option value="driver">سائق</option>
+                                    <option value="admin">مدير</option>
+                                </select>
+                            </div>
+                            <button class="btn btn--primary btn--full-width" onclick="register()">إنشاء الحساب</button>
+                            <p class="auth-switch">
+                                لديك حساب بالفعل؟ <a href="#" onclick="showLoginForm()">تسجيل الدخول</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-      var html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: 250 } /* إعدادات */
-      );
-      html5QrcodeScanner.render(onScanSuccess);
-    </script>
-  </body>
+                <!-- بيانات تجريبية -->
+                <div class="demo-accounts">
+                    <h3>حسابات تجريبية:</h3>
+                    <div class="demo-list">
+                        <div class="demo-account">
+                            <strong>مدير:</strong> admin / admin123
+                        </div>
+                        <div class="demo-account">
+                            <strong>مندوب:</strong> مندوب1 / 123456
+                        </div>
+                        <div class="demo-account">
+                            <strong>سائق:</strong> سائق1 / 123456
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة تحكم الأدمن -->
+    <div id="adminDashboard" class="page hidden">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <h1 class="navbar-title">لوحة تحكم المدير</h1>
+                <div class="navbar-user">
+                    <span id="userWelcome"></span>
+                    <button class="btn btn--secondary btn--sm" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showAdminTab('dashboard')">الرئيسية</button>
+                <button class="tab-btn" onclick="showAdminTab('inventory')">المخزن</button>
+                <button class="tab-btn" onclick="showAdminTab('users')">المستخدمون</button>
+                <button class="tab-btn" onclick="showAdminTab('reports')">التقارير</button>
+            </div>
+
+            <!-- تبويب الرئيسية -->
+            <div id="dashboardTab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>إجمالي المنتجات</h3>
+                        <div class="stat-number" id="totalProducts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>إجمالي المبيعات</h3>
+                        <div class="stat-number" id="totalSales">0 ر.س</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>المناديب النشطين</h3>
+                        <div class="stat-number" id="activeSalesmen">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>منتجات قليلة المخزون</h3>
+                        <div class="stat-number" id="lowStockItems">0</div>
+                    </div>
+                </div>
+
+                <div class="recent-activities">
+                    <h3>النشاطات الأخيرة</h3>
+                    <div id="recentActivities" class="activity-list"></div>
+                </div>
+            </div>
+
+            <!-- تبويب المخزن -->
+            <div id="inventoryTab" class="tab-content hidden">
+                <div class="inventory-header">
+                    <h2>إدارة المخزن</h2>
+                    <button class="btn btn--primary" onclick="showAddProductModal()">إضافة منتج جديد</button>
+                </div>
+                <div class="inventory-table">
+                    <table id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>اسم المنتج</th>
+                                <th>الباركود</th>
+                                <th>السعر</th>
+                                <th>الكمية</th>
+                                <th>الفئة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- تبويب المستخدمون -->
+            <div id="usersTab" class="tab-content hidden">
+                <h2>إدارة المستخدمون</h2>
+                <div id="usersTable"></div>
+            </div>
+
+            <!-- تبويب التقارير -->
+            <div id="reportsTab" class="tab-content hidden">
+                <h2>التقارير والإحصائيات</h2>
+                <div id="salesReport"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهة المندوب/السائق -->
+    <div id="userDashboard" class="page hidden">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <h1 class="navbar-title">لوحة التحكم</h1>
+                <div class="navbar-user">
+                    <span id="userWelcomeUser"></span>
+                    <button class="btn btn--secondary btn--sm" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="user-tabs">
+                <button class="tab-btn active" onclick="showUserTab('scan')">مسح الباركود</button>
+                <button class="tab-btn" onclick="showUserTab('inventory')">مخزوني</button>
+                <button class="tab-btn" onclick="showUserTab('sales')">مبيعاتي</button>
+            </div>
+
+            <!-- تبويب مسح الباركود -->
+            <div id="scanTab" class="tab-content active">
+                <div class="scan-section">
+                    <h2>مسح الباركود</h2>
+                    <div class="scan-buttons">
+                        <button class="btn btn--primary" onclick="startScanning('add')">إضافة من المخزن</button>
+                        <button class="btn btn--secondary" onclick="startScanning('sell')">تسجيل مبيع</button>
+                    </div>
+                    <div id="scannerContainer" class="scanner-container hidden">
+                        <div id="reader"></div>
+                        <button class="btn btn--outline" onclick="stopScanning()">إيقاف المسح</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب مخزوني -->
+            <div id="userInventoryTab" class="tab-content hidden">
+                <h2>مخزوني الشخصي</h2>
+                <div id="userInventoryList"></div>
+            </div>
+
+            <!-- تبويب مبيعاتي -->
+            <div id="userSalesTab" class="tab-content hidden">
+                <h2>سجل مبيعاتي</h2>
+                <div id="userSalesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة منتج -->
+    <div id="addProductModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة منتج جديد</h3>
+                <button class="modal-close" onclick="closeAddProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="productName">اسم المنتج</label>
+                    <input type="text" id="productName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="productBarcode">الباركود</label>
+                    <input type="text" id="productBarcode" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="productPrice">السعر</label>
+                    <input type="number" id="productPrice" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="productStock">الكمية</label>
+                    <input type="number" id="productStock" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="productCategory">الفئة</label>
+                    <input type="text" id="productCategory" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--primary" onclick="addProduct()">إضافة المنتج</button>
+                <button class="btn btn--outline" onclick="closeAddProductModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد الكمية -->
+    <div id="quantityModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="quantityModalTitle">تحديد الكمية</h3>
+                <button class="modal-close" onclick="closeQuantityModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="quantityModalProduct"></p>
+                <div class="form-group">
+                    <label class="form-label" for="quantity">الكمية</label>
+                    <input type="number" id="quantity" class="form-control" min="1" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--primary" onclick="confirmQuantity()">تأكيد</button>
+                <button class="btn btn--outline" onclick="closeQuantityModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- رسائل التنبيه -->
+    <div id="alertContainer" class="alert-container"></div>
+
+    <script src="app.js"></script>
+</body>
 </html>
