@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ماسح باركود المنتجات</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        text-align: center;
+        margin-top: 30px;
+      }
+      #result {
+        padding: 15px;
+        font-size: 1.2em;
+        color: #004400;
+        background: #eafdd5;
+        margin: 15px auto;
+        width: 350px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>ماسح الباركود عبر الكاميرا</h2>
+    <div id="reader" style="width: 350px; margin: auto"></div>
+    <div id="result">نتيجة المسح ستظهر هنا</div>
+
+    <script>
+      function onScanSuccess(decodedText, decodedResult) {
+        document.getElementById(
+          "result"
+        ).innerText = `باركود المنتج: ${decodedText}`;
+        html5QrcodeScanner.clear(); // لإيقاف المسح بعد التقاط أول باركود
+      }
+
+      var html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 10, qrbox: 250 } /* إعدادات */
+      );
+      html5QrcodeScanner.render(onScanSuccess);
+    </script>
+  </body>
+</html>
