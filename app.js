@@ -846,36 +846,20 @@ class SalesApp {
 
     this.html5QrCode = new Html5Qrcode("qr-reader");
 
-    Html5Qrcode.getCameras()
-      .then((cameras) => {
-        if (cameras && cameras.length) {
-          const cameraId = cameras[0].id;
-
-          this.html5QrCode
-            .start(
-              cameraId,
-              {
-                fps: 10,
-                qrbox: { width: 250, height: 250 },
-              },
-              (decodedText, decodedResult) => {
-                this.handleBarcodeScanned(decodedText);
-              },
-              (errorMessage) => {
-                // Handle scan error silently
-              }
-            )
-            .catch((err) => {
-              this.showToast("فشل في تشغيل الكاميرا", "error");
-              console.error("Camera start error:", err);
-            });
-        } else {
-          this.showToast("لم يتم العثور على كاميرا", "error");
+    this.html5QrCode
+      .start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText, decodedResult) => {
+          this.handleBarcodeScanned(decodedText);
+        },
+        (errorMessage) => {
+          // يمكنك استقبال رسالة الخطأ إذا رغبت
         }
-      })
+      )
       .catch((err) => {
-        this.showToast("فشل في الوصول للكاميرا", "error");
-        console.error("Camera access error:", err);
+        this.showToast("فشل في تشغيل الكاميرا", "error");
+        console.error("Camera start error:", err);
       });
   }
 
