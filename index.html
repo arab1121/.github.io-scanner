@@ -3,277 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المخزون والمبيعات</title>
+    <title>نظام إدارة المبيعات</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
-    <!-- صفحة تسجيل الدخول -->
+    <!-- Login Page -->
     <div id="loginPage" class="page active">
-        <div class="container">
-            <div class="login-container">
-                <div class="card">
-                    <div class="card__body">
-                        <h1 class="login-title">نظام إدارة المخزون والمبيعات</h1>
-                        
-                        <!-- نموذج تسجيل الدخول -->
-                        <div id="loginForm" class="auth-form">
-                            <h2>تسجيل الدخول</h2>
-                            <div class="form-group">
-                                <label class="form-label" for="username">اسم المستخدم</label>
-                                <input type="text" id="username" class="form-control" placeholder="أدخل اسم المستخدم">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="password">كلمة المرور</label>
-                                <input type="password" id="password" class="form-control" placeholder="أدخل كلمة المرور">
-                            </div>
-                            <button class="btn btn--primary btn--full-width" onclick="login()">تسجيل الدخول</button>
-                            <p class="auth-switch">
-                                ليس لديك حساب؟ <a href="#" onclick="showRegisterForm()">إنشاء حساب جديد</a>
-                            </p>
+        <div class="login-container">
+            <div class="login-card card">
+                <div class="card__body">
+                    <h1>تسجيل الدخول</h1>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" id="loginUsername" class="form-control" required>
                         </div>
-
-                        <!-- نموذج التسجيل -->
-                        <div id="registerForm" class="auth-form hidden">
-                            <h2>إنشاء حساب جديد</h2>
-                            <div class="form-group">
-                                <label class="form-label" for="regName">الاسم الكامل</label>
-                                <input type="text" id="regName" class="form-control" placeholder="أدخل الاسم الكامل">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="regUsername">اسم المستخدم</label>
-                                <input type="text" id="regUsername" class="form-control" placeholder="أدخل اسم المستخدم">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="regPassword">كلمة المرور</label>
-                                <input type="password" id="regPassword" class="form-control" placeholder="أدخل كلمة المرور">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="userRole">نوع المستخدم</label>
-                                <select id="userRole" class="form-control">
-                                    <option value="salesman">مندوب تسويق</option>
-                                    <option value="driver">سائق</option>
-                                    <option value="admin">مدير</option>
-                                </select>
-                            </div>
-                            <button class="btn btn--primary btn--full-width" onclick="register()">إنشاء الحساب</button>
-                            <p class="auth-switch">
-                                لديك حساب بالفعل؟ <a href="#" onclick="showLoginForm()">تسجيل الدخول</a>
-                            </p>
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" id="loginPassword" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-
-                <!-- بيانات تجريبية -->
-                <div class="demo-accounts">
-                    <h3>حسابات تجريبية:</h3>
-                    <div class="demo-list">
-                        <div class="demo-account">
-                            <strong>مدير:</strong> admin / admin123
-                        </div>
-                        <div class="demo-account">
-                            <strong>مندوب:</strong> مندوب1 / 123456
-                        </div>
-                        <div class="demo-account">
-                            <strong>سائق:</strong> سائق1 / 123456
-                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">دخول</button>
+                    </form>
+                    <div class="login-switch">
+                        <p>ليس لديك حساب؟ <a href="#" id="showRegister">إنشاء حساب جديد</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- لوحة تحكم الأدمن -->
-    <div id="adminDashboard" class="page hidden">
-        <nav class="navbar">
-            <div class="navbar-content">
-                <h1 class="navbar-title">لوحة تحكم المدير</h1>
-                <div class="navbar-user">
-                    <span id="userWelcome"></span>
-                    <button class="btn btn--secondary btn--sm" onclick="logout()">تسجيل الخروج</button>
+    <!-- Register Page -->
+    <div id="registerPage" class="page">
+        <div class="login-container">
+            <div class="login-card card">
+                <div class="card__body">
+                    <h1>إنشاء حساب جديد</h1>
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label class="form-label">الاسم الكامل</label>
+                            <input type="text" id="registerName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" id="registerUsername" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" id="registerPassword" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">نوع المستخدم</label>
+                            <select id="registerRole" class="form-control" required>
+                                <option value="">اختر نوع المستخدم</option>
+                                <option value="rep">مندوب مبيعات</option>
+                                <option value="driver">سائق</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">إنشاء الحساب</button>
+                    </form>
+                    <div class="login-switch">
+                        <p>لديك حساب بالفعل؟ <a href="#" id="showLogin">تسجيل الدخول</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="page">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 id="headerTitle">نظام إدارة المبيعات</h1>
+                <div class="header-actions">
+                    <span id="userInfo" class="user-info"></span>
+                    <button id="logoutBtn" class="btn btn--outline btn--sm">خروج</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="app-nav">
+            <div class="nav-content">
+                <div class="nav-items" id="navItems">
+                    <!-- Navigation items will be populated based on user role -->
                 </div>
             </div>
         </nav>
 
-        <div class="container">
-            <div class="admin-tabs">
-                <button class="tab-btn active" onclick="showAdminTab('dashboard')">الرئيسية</button>
-                <button class="tab-btn" onclick="showAdminTab('inventory')">المخزن</button>
-                <button class="tab-btn" onclick="showAdminTab('users')">المستخدمون</button>
-                <button class="tab-btn" onclick="showAdminTab('reports')">التقارير</button>
-            </div>
-
-            <!-- تبويب الرئيسية -->
-            <div id="dashboardTab" class="tab-content active">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>إجمالي المنتجات</h3>
-                        <div class="stat-number" id="totalProducts">0</div>
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Dashboard -->
+            <div id="dashboard" class="view active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-stats" id="dashboardStats">
+                        <!-- Stats cards will be populated dynamically -->
                     </div>
-                    <div class="stat-card">
-                        <h3>إجمالي المبيعات</h3>
-                        <div class="stat-number" id="totalSales">0 ر.س</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>المناديب النشطين</h3>
-                        <div class="stat-number" id="activeSalesmen">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>منتجات قليلة المخزون</h3>
-                        <div class="stat-number" id="lowStockItems">0</div>
+                    <div class="dashboard-content" id="dashboardContent">
+                        <!-- Main dashboard content -->
                     </div>
                 </div>
+            </div>
 
-                <div class="recent-activities">
-                    <h3>النشاطات الأخيرة</h3>
-                    <div id="recentActivities" class="activity-list"></div>
+            <!-- Products Management -->
+            <div id="products" class="view">
+                <div class="view-header">
+                    <h2>إدارة المنتجات</h2>
+                    <button id="addProductBtn" class="btn btn--primary">إضافة منتج</button>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be populated dynamically -->
                 </div>
             </div>
 
-            <!-- تبويب المخزن -->
-            <div id="inventoryTab" class="tab-content hidden">
-                <div class="inventory-header">
-                    <h2>إدارة المخزن</h2>
-                    <button class="btn btn--primary" onclick="showAddProductModal()">إضافة منتج جديد</button>
+            <!-- Inventory Management -->
+            <div id="inventory" class="view">
+                <div class="view-header">
+                    <h2>إدارة المخزون</h2>
+                    <button id="scanBarcodeBtn" class="btn btn--primary">مسح الباركود</button>
                 </div>
-                <div class="inventory-table">
-                    <table id="productsTable">
-                        <thead>
-                            <tr>
-                                <th>اسم المنتج</th>
-                                <th>الباركود</th>
-                                <th>السعر</th>
-                                <th>الكمية</th>
-                                <th>الفئة</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody"></tbody>
-                    </table>
+                <div class="inventory-content">
+                    <div class="inventory-list" id="inventoryList">
+                        <!-- Inventory items will be populated dynamically -->
+                    </div>
                 </div>
             </div>
 
-            <!-- تبويب المستخدمون -->
-            <div id="usersTab" class="tab-content hidden">
-                <h2>إدارة المستخدمون</h2>
-                <div id="usersTable"></div>
+            <!-- Sales Management -->
+            <div id="sales" class="view">
+                <div class="view-header">
+                    <h2>إدارة المبيعات</h2>
+                    <button id="addSaleBtn" class="btn btn--primary">تسجيل عملية بيع</button>
+                </div>
+                <div class="sales-content">
+                    <div class="sales-list" id="salesList">
+                        <!-- Sales records will be populated dynamically -->
+                    </div>
+                </div>
             </div>
 
-            <!-- تبويب التقارير -->
-            <div id="reportsTab" class="tab-content hidden">
-                <h2>التقارير والإحصائيات</h2>
-                <div id="salesReport"></div>
+            <!-- Customers Management -->
+            <div id="customers" class="view">
+                <div class="view-header">
+                    <h2>إدارة العملاء</h2>
+                    <button id="addCustomerBtn" class="btn btn--primary">إضافة عميل</button>
+                </div>
+                <div class="customers-list" id="customersList">
+                    <!-- Customers will be populated dynamically -->
+                </div>
             </div>
-        </div>
+
+            <!-- Chat -->
+            <div id="chat" class="view">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h2>الدردشة</h2>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be populated dynamically -->
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatMessageInput" class="form-control" placeholder="اكتب رسالتك...">
+                        <button id="sendMessageBtn" class="btn btn--primary">إرسال</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports -->
+            <div id="reports" class="view">
+                <div class="view-header">
+                    <h2>التقارير</h2>
+                </div>
+                <div class="reports-content" id="reportsContent">
+                    <!-- Reports will be populated dynamically -->
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- واجهة المندوب/السائق -->
-    <div id="userDashboard" class="page hidden">
-        <nav class="navbar">
-            <div class="navbar-content">
-                <h1 class="navbar-title">لوحة التحكم</h1>
-                <div class="navbar-user">
-                    <span id="userWelcomeUser"></span>
-                    <button class="btn btn--secondary btn--sm" onclick="logout()">تسجيل الخروج</button>
-                </div>
-            </div>
-        </nav>
-
-        <div class="container">
-            <div class="user-tabs">
-                <button class="tab-btn active" onclick="showUserTab('scan')">مسح الباركود</button>
-                <button class="tab-btn" onclick="showUserTab('inventory')">مخزوني</button>
-                <button class="tab-btn" onclick="showUserTab('sales')">مبيعاتي</button>
-            </div>
-
-            <!-- تبويب مسح الباركود -->
-            <div id="scanTab" class="tab-content active">
-                <div class="scan-section">
-                    <h2>مسح الباركود</h2>
-                    <div class="scan-buttons">
-                        <button class="btn btn--primary" onclick="startScanning('add')">إضافة من المخزن</button>
-                        <button class="btn btn--secondary" onclick="startScanning('sell')">تسجيل مبيع</button>
-                    </div>
-                    <div id="scannerContainer" class="scanner-container hidden">
-                        <div id="reader"></div>
-                        <button class="btn btn--outline" onclick="stopScanning()">إيقاف المسح</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- تبويب مخزوني -->
-            <div id="userInventoryTab" class="tab-content hidden">
-                <h2>مخزوني الشخصي</h2>
-                <div id="userInventoryList"></div>
-            </div>
-
-            <!-- تبويب مبيعاتي -->
-            <div id="userSalesTab" class="tab-content hidden">
-                <h2>سجل مبيعاتي</h2>
-                <div id="userSalesList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة إضافة منتج -->
-    <div id="addProductModal" class="modal hidden">
+    <!-- Modals -->
+    <!-- Product Modal -->
+    <div id="productModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>إضافة منتج جديد</h3>
-                <button class="modal-close" onclick="closeAddProductModal()">&times;</button>
+                <h3 id="productModalTitle">إضافة منتج</h3>
+                <button id="closeProductModal" class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label" for="productName">اسم المنتج</label>
-                    <input type="text" id="productName" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="productBarcode">الباركود</label>
-                    <input type="text" id="productBarcode" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="productPrice">السعر</label>
-                    <input type="number" id="productPrice" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="productStock">الكمية</label>
-                    <input type="number" id="productStock" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="productCategory">الفئة</label>
-                    <input type="text" id="productCategory" class="form-control">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn--primary" onclick="addProduct()">إضافة المنتج</button>
-                <button class="btn btn--outline" onclick="closeAddProductModal()">إلغاء</button>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label class="form-label">اسم المنتج</label>
+                        <input type="text" id="productName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الباركود</label>
+                        <input type="text" id="productBarcode" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">سعر الجملة</label>
+                        <input type="number" id="productWholesalePrice" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">سعر المفرق</label>
+                        <input type="number" id="productRetailPrice" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الكمية في المخزن</label>
+                        <input type="number" id="productStock" class="form-control" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="cancelProductModal" class="btn btn--outline">إلغاء</button>
+                        <button type="submit" class="btn btn--primary">حفظ</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- نافذة تأكيد الكمية -->
-    <div id="quantityModal" class="modal hidden">
+    <!-- Barcode Scanner Modal -->
+    <div id="scannerModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="quantityModalTitle">تحديد الكمية</h3>
-                <button class="modal-close" onclick="closeQuantityModal()">&times;</button>
+                <h3>مسح الباركود</h3>
+                <button id="closeScannerModal" class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <p id="quantityModalProduct"></p>
-                <div class="form-group">
-                    <label class="form-label" for="quantity">الكمية</label>
-                    <input type="number" id="quantity" class="form-control" min="1" value="1">
+                <div id="qr-reader" style="width: 100%; height: 300px;"></div>
+                <div id="scanResult" class="scan-result hidden">
+                    <h4>تم العثور على المنتج:</h4>
+                    <div id="scannedProduct"></div>
+                    <div class="form-group">
+                        <label class="form-label">الكمية</label>
+                        <input type="number" id="scannedQuantity" class="form-control" value="1" min="1">
+                    </div>
+                    <div class="modal-actions">
+                        <button id="cancelScan" class="btn btn--outline">إلغاء</button>
+                        <button id="addScannedProduct" class="btn btn--primary">إضافة للمخزون</button>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn--primary" onclick="confirmQuantity()">تأكيد</button>
-                <button class="btn btn--outline" onclick="closeQuantityModal()">إلغاء</button>
             </div>
         </div>
     </div>
 
-    <!-- رسائل التنبيه -->
-    <div id="alertContainer" class="alert-container"></div>
+    <!-- Sale Modal -->
+    <div id="saleModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تسجيل عملية بيع</h3>
+                <button id="closeSaleModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="saleForm">
+                    <div class="form-group">
+                        <label class="form-label">المنتج</label>
+                        <select id="saleProduct" class="form-control" required>
+                            <option value="">اختر المنتج</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الكمية</label>
+                        <input type="number" id="saleQuantity" class="form-control" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع البيع</label>
+                        <select id="salePriceType" class="form-control" required>
+                            <option value="retail">مفرق</option>
+                            <option value="wholesale">جملة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">العميل</label>
+                        <select id="saleCustomer" class="form-control" required>
+                            <option value="">اختر العميل</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="cancelSaleModal" class="btn btn--outline">إلغاء</button>
+                        <button type="submit" class="btn btn--primary">تسجيل البيع</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div id="customerModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة عميل</h3>
+                <button id="closeCustomerModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label class="form-label">اسم العميل</label>
+                        <input type="text" id="customerName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">رقم الهاتف</label>
+                        <input type="tel" id="customerPhone" class="form-control" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="cancelCustomerModal" class="btn btn--outline">إلغاء</button>
+                        <button type="submit" class="btn btn--primary">حفظ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast hidden">
+        <div class="toast-content">
+            <span id="toastMessage"></span>
+            <button id="closeToast" class="toast-close">&times;</button>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
